@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 namespace ManejoPresupuesto.Services
 {
-    public class TiposCuentasRepository: ITiposCuentas
+    public class TiposCuentasRepository : ITiposCuentas
     {
         private readonly string connectionString;
 
@@ -24,6 +24,19 @@ namespace ManejoPresupuesto.Services
             );
 
             tipoCuenta.Id = id;
+        }
+
+        public async Task<bool> Exists(string nombre, int usuarioId)
+        {
+            using var con = new SqlConnection(connectionString);
+            var exists = await con.QueryFirstOrDefaultAsync<int>(
+                @"SELECT 1 
+                  FROM TiposCuentas
+                  WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId;",
+                  new { nombre, usuarioId }
+            );
+
+            return  exists == 1;
         }
     }
 }
