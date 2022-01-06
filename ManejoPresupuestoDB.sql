@@ -91,3 +91,17 @@ VALUES('Gastos');
 SELECT * FROM Transacciones;
 
 SELECT * FROM TiposOperaciones;
+
+create proc SP_TiposCuentas_Insertar(
+	@Nombre varchar(50),
+	@UsuarioId int 
+)
+AS
+	DECLARE @Orden int;
+
+	SELECT @Orden = COALESCE(MAX(Orden), 0) + 1
+	FROM TiposCuentas
+	WHERE UsuarioId = @UsuarioId;
+
+	INSERT INTO TiposCuentas(Nombre, UsuarioId, Orden)
+	VALUES(@Nombre, @UsuarioId, @Orden);

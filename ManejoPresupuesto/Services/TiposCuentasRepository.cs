@@ -18,9 +18,9 @@ namespace ManejoPresupuesto.Services
         {
             using var connection = new SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>(
-                @"INSERT INTO TiposCuentas(Nombre, UsuarioId, Orden)
-                  VALUES(@Nombre, @UsuarioId, 0);
-                  SELECT SCOPE_IDENTITY();", tipoCuenta
+                "SP_TiposCuentas_Insertar",
+                new { nombre = tipoCuenta.Nombre, usuarioId = tipoCuenta.UsuarioId },
+                commandType: System.Data.CommandType.StoredProcedure
             );
 
             tipoCuenta.Id = id;
