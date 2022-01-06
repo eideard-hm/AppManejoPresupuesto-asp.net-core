@@ -61,6 +61,16 @@ namespace ManejoPresupuesto.Services
             );
         }
 
+        public async Task Delete(int id)
+        {
+            using var con = new SqlConnection(connectionString);
+            await con.ExecuteAsync(
+                @"DELETE TiposCuentas
+                  WHERE Id = @Id",
+                new { id }
+            );
+        }
+
         public async Task<TipoCuenta> GetUserById(int id, int usuarioId)
         {
             using var con = new SqlConnection(connectionString);

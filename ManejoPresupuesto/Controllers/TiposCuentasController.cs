@@ -95,5 +95,19 @@ namespace ManejoPresupuesto.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var usuarioId = usuarios.GetUserById();
+            var tipoCuenta = await tiposCuentasRepository.GetUserById(id, usuarioId);
+
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NotFoundResult", "Home");
+            }
+            await tiposCuentasRepository.Delete(id);
+            return RedirectToAction("Index");
+        }
+
     }
 }
