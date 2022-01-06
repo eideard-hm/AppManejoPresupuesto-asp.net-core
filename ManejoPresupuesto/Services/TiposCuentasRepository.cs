@@ -36,7 +36,18 @@ namespace ManejoPresupuesto.Services
                   new { nombre, usuarioId }
             );
 
-            return  exists == 1;
+            return exists == 1;
+        }
+
+        public async Task<IEnumerable<TipoCuenta>> GetAll(int usuarioId)
+        {
+            using var con = new SqlConnection(connectionString);
+            return await con.QueryAsync<TipoCuenta>(
+                 @"SELECT Id, Nombre, Orden
+                    FROM TiposCuentas
+                    WHERE UsuarioId = @UsuarioId",
+                 new { usuarioId }
+            );
         }
     }
 }
