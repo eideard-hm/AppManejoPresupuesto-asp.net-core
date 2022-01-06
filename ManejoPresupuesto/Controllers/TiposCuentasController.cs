@@ -1,37 +1,38 @@
 ﻿using Dapper;
+using ManejoPresupuesto.Interfaces;
 using ManejoPresupuesto.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 
 namespace ManejoPresupuesto.Controllers
 {
-    public class TiposCuentasController: Controller
+    public class TiposCuentasController : Controller
     {
-        private readonly string connectionString;
+        private readonly ITiposCuentas tiposCuentasRepository;
 
-        public TiposCuentasController(IConfiguration configuration)
+        public TiposCuentasController(ITiposCuentas tiposCuentasRepository)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            this.tiposCuentasRepository = tiposCuentasRepository;
         }
 
         public IActionResult Crear()
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                var query = connection.Query("SELECT 1").FirstOrDefault();
-            }
-
             return View();
         }
 
         [HttpPost]
-        public IActionResult Crear(TipoCuenta tipoCuenta)
+        public async Task<IActionResult> Crear(TipoCuenta tipoCuenta)
         {
             if (!ModelState.IsValid)
             {
                 return View(tipoCuenta);
             }
+
+            tipoCuenta.UsuarioId = 1;
+            await tiposCuentasRepository.Crear(tipoCuenta);
+
             return View();
         }
+
+
     }
 }
