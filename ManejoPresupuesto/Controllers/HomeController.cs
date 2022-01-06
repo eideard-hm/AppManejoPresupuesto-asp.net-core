@@ -23,6 +23,11 @@ namespace ManejoPresupuesto.Controllers
             return View();
         }
 
+        public IActionResult NotFoundResult()
+        {
+            return View("NotFound");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -66,6 +66,34 @@ namespace ManejoPresupuesto.Controllers
             return Json(true);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var usuarioId = usuarios.GetUserById();
+            var tipoCuenta = await tiposCuentasRepository.GetUserById(id, usuarioId);
+
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NotFoundResult", "Home");
+            }
+
+            return View(tipoCuenta);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(TipoCuenta tipoCuenta)
+        {
+            var usuarioId = usuarios.GetUserById();
+            var tipoCuentaExists = await tiposCuentasRepository.GetUserById(tipoCuenta.Id, usuarioId);
+
+            if (tipoCuentaExists is null)
+            {
+                return RedirectToAction("NotFoundResult", "Home");
+            }
+
+            await tiposCuentasRepository.Edit(tipoCuenta);
+            return RedirectToAction("Index");
+        }
 
     }
 }
