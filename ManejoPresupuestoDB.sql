@@ -105,3 +105,5 @@ AS
 
 	INSERT INTO TiposCuentas(Nombre, UsuarioId, Orden)
 	VALUES(@Nombre, @UsuarioId, @Orden);
+
+	SELECT SCOPE_IDENTITY();

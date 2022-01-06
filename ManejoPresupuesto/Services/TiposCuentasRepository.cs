@@ -45,7 +45,8 @@ namespace ManejoPresupuesto.Services
             return await con.QueryAsync<TipoCuenta>(
                  @"SELECT Id, Nombre, Orden
                     FROM TiposCuentas
-                    WHERE UsuarioId = @UsuarioId",
+                    WHERE UsuarioId = @UsuarioId
+                    ORDER BY Orden",
                  new { usuarioId }
             );
         }
