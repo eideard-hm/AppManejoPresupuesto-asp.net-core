@@ -82,5 +82,13 @@ namespace ManejoPresupuesto.Services
                 new { id, usuarioId }
          );
         }
+
+        public async Task Sort(IEnumerable<TipoCuenta> tipoCuentas)
+        {
+            var query = "UPDATE TiposCuentas SET Orden = @Orden WHERE Id = @Id";
+            using var con = new SqlConnection(connectionString);
+
+            await con.ExecuteAsync(query, tipoCuentas);
+        }
     }
 }

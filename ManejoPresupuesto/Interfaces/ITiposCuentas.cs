@@ -10,5 +10,6 @@ namespace ManejoPresupuesto.Interfaces
         Task<bool> Exists(string nombre, int usuarioId);
         Task<IEnumerable<TipoCuenta>> GetAll(int usuarioId);
         Task<TipoCuenta> GetUserById(int id, int usuarioId);
+        Task Sort(IEnumerable<TipoCuenta> tipoCuentas);
     }
 }

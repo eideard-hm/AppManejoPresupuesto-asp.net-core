@@ -20,18 +20,22 @@
         </tr>
     </thead>
     <tbody id="reordenable">
-        @if(@Model is not null){
+        @if (@Model is not null)
+        {
             @foreach (var tipoCuenta in Model)
             {
                 <tr>
                     <td>
+                        <input type="hidden" value="@tipoCuenta.Id" class="ids" />
                         <a class="btn btn-primary" asp-action="Edit" asp-route-id="@tipoCuenta.Id">Edit</a>
-                        <a class="btn btn-danger" onclick="javascript:return confirm('¿Seguro que desea elimiar el registro: @tipoCuenta.Nombre?');" asp-action="Delete" asp-route-id="@tipoCuenta.Id" >Delete</a>
+                        <a class="btn btn-danger" onclick="javascript:return confirm('¿Seguro que desea elimiar el registro: @tipoCuenta.Nombre?');" asp-action="Delete" asp-route-id="@tipoCuenta.Id">Delete</a>
                     </td>
                     <td>@tipoCuenta.Nombre</td>
                 </tr>
             }
-        }else{
+        }
+        else
+        {
             <tr>
                 <td colspan="12">No se encontrarón resultados.</td>
             </tr>
@@ -41,9 +45,38 @@
 </table>
 
 @section Scripts{
-    <script>
-       $(function(){
-           $("#reordenable").sortable();
-       })
-    </script>
+<script>
+    const urlOrdenar = '@Url.Action("Sort")';
+    let arrIds = [];
+
+     $(function(){
+        $("#reordenable").sortable({
+            stop: async(e, ui) => {
+                await actualizarOrdenes();
+            }
+        });
+
+        const actualizarOrdenes = async() => {
+            const ids = document.querySelectorAll('.ids');
+
+            ids.forEach(id => {
+                arrIds.push(id.value);
+            });
+
+           await enviarIdsAlBackend(arrIds);
+
+            arrIds = [];
+        }
+
+        const enviarIdsAlBackend = async(arrIds) => {
+            await fetch(urlOrdenar, {
+                method: 'POST',
+                body: JSON.stringify(arrIds),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+    })
+</script>
 }
