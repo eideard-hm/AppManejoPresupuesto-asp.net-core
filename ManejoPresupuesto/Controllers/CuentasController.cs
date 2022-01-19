@@ -21,6 +21,23 @@ namespace ManejoPresupuesto.Controllers
             this.cuentasRepository = cuentasRepository;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var usuarioId = usuarios.GetUserById();
+            var cuentasConTipoCuenta = await cuentasRepository.SearchById(usuarioId);
+
+            var model = cuentasConTipoCuenta
+                        .GroupBy(x => x.TipoCuenta)
+                        .Select(grupo =>
+                                new IndiceCuentasViewModel
+                                {
+                                    TipoCuenta = grupo.Key,
+                                    Cuentas = grupo.AsEnumerable()
+                                }
+                        ).ToList();
+            return View(model);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Crear()
         {
@@ -51,6 +68,7 @@ namespace ManejoPresupuesto.Controllers
             await cuentasRepository.Create(cuentaCreacionViewModel);
             return RedirectToAction("Index");
         }
+
 
         private async Task<IEnumerable<SelectListItem>> getTiposCuentas(int usuarioId)
         {

@@ -1,3 +1,22 @@
 ﻿#reordenable tr{
     cursor: move;
 }
+
+.contenedor-totales{
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+    text-align: center;
+}
+
+.activos{
+    color: blue;
+}
+
+.pasivos{
+    color: red;
+}
+
+.total{
+    color: green;
+}
