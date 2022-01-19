@@ -7,6 +7,11 @@
     {
         return Math.Abs(balance).ToString("C");
     }
+
+    string getClassBalance(decimal balance)
+    {
+        return balance >= 0 ? "pasivo" : "activo";
+    }
 }
 
 <h1>Cuentas</h1>
@@ -41,4 +46,55 @@
         </div>
     </div>
 
+</div>
+
+<div class="accordion acordeon-cuenta">
+    @foreach (var tipoCuenta in Model)
+    {
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="cabeceraUno">
+                @{
+                    var id = tipoCuenta.TipoCuenta.Replace(" ", "");
+                    var dataBSTTarget = "#" + id;
+                    var claseTipoCuenta = getClassBalance(tipoCuenta.Balance);
+                }
+
+                <button class="accordion-button" 
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="@dataBSTTarget">
+
+                        <span class="me-3">
+                            <span>
+                                <strong>@tipoCuenta.TipoCuenta</strong>
+                            </span>
+                            <span class="@claseTipoCuenta">
+                                <strong>@FormartBalance(tipoCuenta.Balance)</strong>
+                            </span>
+                        </span>
+                </button>
+            </h2>
+
+            <div id="@id" class="accordion-collapse collapse show">
+                <div>
+                    <ul class="list-group">
+                        @foreach (var cuenta in tipoCuenta.Cuentas)
+                        {
+                            var claseCuenta = getClassBalance(cuenta.Balance);
+
+                            <li class="list-group-item">
+                                <span>
+                                    <strong>@cuenta.Nombre</strong>
+                                </span>
+                                <span class="@claseCuenta">
+                                    <strong>@FormartBalance(cuenta.Balance)</strong>
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </div>       
+    }
 </div>
