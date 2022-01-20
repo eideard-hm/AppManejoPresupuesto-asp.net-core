@@ -44,7 +44,7 @@ namespace ManejoPresupuesto.Controllers
             var usuarioId = usuarios.GetUserById();
             
             var model = new CuentaCreacionViewModel();
-            model.TiposCuentas = await getTiposCuentas(usuarioId);
+            model.TiposCuentas = await GetTiposCuentas(usuarioId);
 
             return View(model);
         }
@@ -61,7 +61,7 @@ namespace ManejoPresupuesto.Controllers
             }
             if (!ModelState.IsValid)
             {
-                cuentaCreacionViewModel.TiposCuentas = await getTiposCuentas(usuarioId);
+                cuentaCreacionViewModel.TiposCuentas = await GetTiposCuentas(usuarioId);
                 return View(cuentaCreacionViewModel);
             }
 
@@ -69,8 +69,30 @@ namespace ManejoPresupuesto.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> Edit(int id)
+        {
+            var usuarioId = usuarios.GetUserById();
+            var cuenta = await cuentasRepository.GetById(id, usuarioId);
 
-        private async Task<IEnumerable<SelectListItem>> getTiposCuentas(int usuarioId)
+            if(cuenta is null)
+            {
+                return RedirectToAction("NotFoundResult", "Home");
+            }
+
+            var model = new CuentaCreacionViewModel()
+            {
+                Id = cuenta.Id,
+                Nombre = cuenta.Nombre,
+                TipoCuentaId = cuenta.TipoCuentaId,
+                Descripcion = cuenta.Descripcion,
+                Balance = cuenta.Balance
+            };
+
+            model.TiposCuentas = await GetTiposCuentas(usuarioId);
+            return View(model);
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetTiposCuentas(int usuarioId)
         {
             var tiposCuentas = await tiposCuentasRepository.GetAll(usuarioId);
             return tiposCuentas.Select(x => new SelectListItem(x.Nombre, x.Id.ToString()));

@@ -27,7 +27,7 @@ namespace ManejoPresupuesto.Services
 
         public async Task<IEnumerable<Cuenta>> SearchById(int usuarioId)
         {
-            var conn = new SqlConnection(connectionString);
+           using var conn = new SqlConnection(connectionString);
             return await conn.QueryAsync<Cuenta>(@"
                 SELECT c.Id, c.Nombre, c.Balance, tc.Nombre AS TipoCuenta
                 FROM Cuentas c
@@ -36,6 +36,18 @@ namespace ManejoPresupuesto.Services
                 WHERE tc.UsuarioId = @UsuarioId
                 ORDER BY tc.Orden;
              ", new {usuarioId});
+        }
+
+        public async Task<Cuenta> GetById(int id, int usuarioId)
+        {
+            using var conn = new SqlConnection(connectionString);
+            return await conn.QueryFirstOrDefaultAsync<Cuenta>(@"
+                SELECT c.Id, c.Nombre, c.Balance, c.Descripcion, c.TipoCuentaId
+                FROM Cuentas c
+                INNER JOIN TiposCuentas tc
+                ON tc.Id = c.TipoCuentaId
+                WHERE tc.UsuarioId = @UsuarioId AND c.Id = @Id; 
+            ", new {id, usuarioId });
         }
     }
 }

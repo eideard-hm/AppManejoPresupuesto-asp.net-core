@@ -85,6 +85,13 @@
                             <li class="list-group-item">
                                 <span>
                                     <strong>@cuenta.Nombre</strong>
+
+                                   <a class="btn btn-primary" asp-action="Edit" asp-route-id="@cuenta.Id">
+                                       <i class="bi bi-pencil-square" ></i>
+                                   </a>
+                                   <a class="btn btn-danger">
+                                       <i class="bi bi-trash"></i>
+                                   </a>
                                 </span>
                                 <span class="@claseCuenta">
                                     <strong>@FormartBalance(cuenta.Balance)</strong>

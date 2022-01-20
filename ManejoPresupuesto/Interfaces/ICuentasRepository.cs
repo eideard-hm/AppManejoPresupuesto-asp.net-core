@@ -6,5 +6,6 @@ namespace ManejoPresupuesto.Interfaces
     {
         Task Create(Cuenta cuenta);
         Task<IEnumerable<Cuenta>> SearchById(int usuarioId);
+        Task<Cuenta> GetById(int id, int usuarioId);
     }
 }
