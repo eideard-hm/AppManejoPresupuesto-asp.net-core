@@ -1,4 +1,5 @@
-﻿using ManejoPresupuesto.Interfaces;
+﻿using AutoMapper;
+using ManejoPresupuesto.Interfaces;
 using ManejoPresupuesto.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,15 +11,18 @@ namespace ManejoPresupuesto.Controllers
         private readonly ITiposCuentas tiposCuentasRepository;
         private readonly IUsuarios usuarios;
         private readonly ICuentasRepository cuentasRepository;
+        private readonly IMapper mapper;
 
         public CuentasController(
                                 ITiposCuentas tiposCuentasRepository,
                                 IUsuarios usuarios,
-                                ICuentasRepository cuentasRepository)
+                                ICuentasRepository cuentasRepository,
+                                IMapper mapper)
         {
             this.tiposCuentasRepository = tiposCuentasRepository;
             this.usuarios = usuarios;
             this.cuentasRepository = cuentasRepository;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -42,7 +46,7 @@ namespace ManejoPresupuesto.Controllers
         public async Task<IActionResult> Crear()
         {
             var usuarioId = usuarios.GetUserById();
-            
+
             var model = new CuentaCreacionViewModel();
             model.TiposCuentas = await GetTiposCuentas(usuarioId);
 
@@ -55,7 +59,7 @@ namespace ManejoPresupuesto.Controllers
             var usuarioId = usuarios.GetUserById();
             var tipoCuenta = await tiposCuentasRepository.GetUserById(cuentaCreacionViewModel.Id, usuarioId);
 
-            if(tipoCuenta == null)
+            if (tipoCuenta == null)
             {
                 RedirectToAction("NotFoundResult", "Home");
             }
@@ -74,19 +78,12 @@ namespace ManejoPresupuesto.Controllers
             var usuarioId = usuarios.GetUserById();
             var cuenta = await cuentasRepository.GetById(id, usuarioId);
 
-            if(cuenta is null)
+            if (cuenta is null)
             {
                 return RedirectToAction("NotFoundResult", "Home");
             }
 
-            var model = new CuentaCreacionViewModel()
-            {
-                Id = cuenta.Id,
-                Nombre = cuenta.Nombre,
-                TipoCuentaId = cuenta.TipoCuentaId,
-                Descripcion = cuenta.Descripcion,
-                Balance = cuenta.Balance
-            };
+            var model = mapper.Map<CuentaCreacionViewModel>(cuenta);
 
             model.TiposCuentas = await GetTiposCuentas(usuarioId);
             return View(model);
@@ -96,6 +93,6 @@ namespace ManejoPresupuesto.Controllers
         {
             var tiposCuentas = await tiposCuentasRepository.GetAll(usuarioId);
             return tiposCuentas.Select(x => new SelectListItem(x.Nombre, x.Id.ToString()));
-        } 
+        }
     }
 }
