@@ -26,9 +26,20 @@
             {
                 <tr>
                     <td>
-                        <input type="hidden" value="@tipoCuenta.Id" class="ids" />
-                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@tipoCuenta.Id">Edit</a>
-                        <a class="btn btn-danger" onclick="javascript:return confirm('¿Seguro que desea elimiar el registro: @tipoCuenta.Nombre?');" asp-action="Delete" asp-route-id="@tipoCuenta.Id">Delete</a>
+                        <input type="hidden" 
+                               value="@tipoCuenta.Id" 
+                               class="ids" />
+                        <a class="btn btn-primary" 
+                           asp-action="Edit" 
+                           asp-route-id="@tipoCuenta.Id">
+                           Edit
+                       </a>
+                        <a class="btn btn-danger" 
+                           onclick="javascript:return confirm('¿Seguro que desea elimiar el registro: @tipoCuenta.Nombre?');" 
+                           asp-action="Delete" 
+                           asp-route-id="@tipoCuenta.Id">
+                           Delete
+                       </a>
                     </td>
                     <td>@tipoCuenta.Nombre</td>
                 </tr>
